@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nitter
+  labels:
+    app: nitter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nitter
+  template:
+    metadata:
+      labels:
+        app: nitter
+    spec:
+      containers:
+        - name: nitter
+          image: zedeus/nitter:latest
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - mountPath: /src/nitter.conf
+              subPath: nitter.conf
+              name: nitter-conf
+        - name: nginx      
+          image: nginx:stable-alpine
+          volumeMounts:
+            - mountPath: /etc/nginx
+              name: nitter-nginx-conf
+      volumes:
+        - name: nitter-conf
+          configMap:
+            defaultMode: 444
+            name: nitter-conf
+        - name: nitter-nginx-conf
+          configMap:
+            defaultMode: 444
+            name: nitter-nginx-conf
