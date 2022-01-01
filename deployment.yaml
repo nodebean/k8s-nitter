@@ -28,6 +28,8 @@ spec:
           volumeMounts:
             - mountPath: /etc/nginx
               name: nitter-nginx-conf
+        - name: redis
+          image: redis:6-alpine
       volumes:
         - name: nitter-conf
           configMap:
